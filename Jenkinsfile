@@ -13,7 +13,7 @@ pipeline {
                 //     sh "scp -o StrictHostKeyChecking=no $Jenkins_server ec2-user@18.134.143.29:/ec2-user/Jenkins_server.pem"
                 //                                                                                                                                 }
                 //                             }
-                // }
+                }
             }
         }
         
