@@ -1,0 +1,77 @@
+---
+- name: Wait for server to be ready before ssh connection.
+  hosts: aws_ec2 #use aws_ec2 group name. name for all your ec2 servers. or use all like we did earlier.
+  gather_facts: false
+  tasks:
+    - name: Ensure ssh port is open
+      vars:
+        ansible_python_interpreter: /usr/bin/python
+      ansible.builtin.wait_for:   #waits for ssh connection before executing next tasks
+        port: 22 #waits until port 22 is open
+        delay: 10 #delay for 10sec before checking if port 22 is open
+        timeout: 100
+        search_regex: OpenSSH
+        host: "{{(ansible_ssh_host|default(ansible_host))|default(inventory_hostname)}}" #defines which host you want to connect to. I don't wamt to hard code it. so passing it down from the host in line 4.
+      vars:
+        ansible_connection: local #means we want to execute this locally.
+
+        
+  
+
+- name: Install python3, docker and docker-compose on ec2_server
+  hosts: aws_ec2 #use aws_ec2 group name. name for all your ec2 servers. or use all like we did earlier.#all #changed to all so it can accept the dynamic IP from terraform
+  become: yes
+  gather_facts: false
+  tasks:
+    - name: Update yum repository
+      vars:
+        ansible_python_interpreter: /usr/bin/python
+      ansible.builtin.yum:
+        update_cache: yes
+    - name: Make sure python3 is installed
+      vars:
+        ansible_python_interpreter: /usr/bin/python #any  execution of yum uses python2. So had to change it from python 3.
+      ansible.builtin.yum:
+        name: python3
+        state: present
+    - name: Install python module docker #installing python module with pip because ansible depends on it for docker and docker-compose.
+      ansible.builtin.pip:
+        name:
+          - docker
+          - docker-compose
+    - name: Install docker
+      vars:
+        ansible_python_interpreter: /usr/bin/python
+      ansible.builtin.yum:
+        name: docker
+        state: present
+    - name: Ensured docker is running
+      ansible.builtin.systemd: #this is a module for system controll
+        name: docker
+        state: started
+    - name: Install docker compose
+      ansible.builtin.get_url: #allows you fetch something from the internet. you can also set the destination and mode with get_url
+        url: https://github.com/docker/compose/releases/latest/download/docker-compose-Linux-x86_64 #{{lookup('pipe','uname -m')}}
+        dest: /usr/local/bin/docker-compose
+        mode: +x
+
+- name: Add ec2_user to docker group
+  hosts: aws_ec2 #use aws_ec2 group name. name for all your ec2 servers. or use all like we did earlier.
+  become: yes
+  tasks:
+    - name: Add ec2_user to docker group
+      ansible.builtin.user:
+        name: ec2-user
+        groups:
+          - docker
+        append: yes
+    - name: Reconnect to server after creating a new group
+      ansible.builtin.meta: reset_connection
+
+
+
+
+
+        
+
+
