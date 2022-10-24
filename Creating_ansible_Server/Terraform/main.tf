@@ -16,6 +16,7 @@ resource "aws_vpc" "development-vpc" {
   tags = {
     "Name" : "${var.env_prefix}-vpc"
   }
+  enable_dns_hostnames = true
 }
 module "my-app-subnet" {
   source = "./modules/subnet"

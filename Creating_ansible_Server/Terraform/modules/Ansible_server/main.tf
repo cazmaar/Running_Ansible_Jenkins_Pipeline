@@ -57,7 +57,7 @@ resource "aws_instance" "ansible_server" {
   key_name                    = "Jenkins_server"
 
   tags = {
-    "Name" = "${var.env_prefix}-server"
+    "Name" = "Ansible-server"
   }
 }
 # resource "aws_instance" "ec2-1" {
