@@ -60,19 +60,19 @@ resource "aws_instance" "ansible_server" {
     "Name" = "Ansible-server"
   }
 }
-# resource "aws_instance" "ec2-1" {
-#   ami                         = data.aws_ami.latest_amazon_linux_image.id
-#   instance_type               = var.instance_type
-#   subnet_id                   = var.subnet_id
-#   vpc_security_group_ids      = [aws_security_group.allow_tls.id]
-#   availability_zone           = var.availability_zone
-#   associate_public_ip_address = true
-#   key_name                    = "Jenkins_server"
+resource "aws_instance" "ec2-1" {
+  ami                         = data.aws_ami.latest_amazon_linux_image.id
+  instance_type               = var.instance_type
+  subnet_id                   = var.subnet_id
+  vpc_security_group_ids      = [aws_security_group.allow_tls.id]
+  availability_zone           = var.availability_zone
+  associate_public_ip_address = true
+  key_name                    = "Jenkins_server"
 
-#   tags = {
-#     "Name" = "${var.env_prefix}-server"
-#   }
-# }
+  tags = {
+    "Name" = "dev-server"
+  }
+}
 # resource "aws_instance" "ec2-2" {
 #   ami                         = data.aws_ami.latest_amazon_linux_image.id
 #   instance_type               = var.instance_type

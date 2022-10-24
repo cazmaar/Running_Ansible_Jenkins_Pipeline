@@ -6,7 +6,7 @@ regions:
 filters:
   instance-state-name: running #filter the servers by instance state.
   tag:Name: #checks for servers with this dev names.
-    - Ansible* #the tag name you want to use to filter
+    - dev* #the tag name you want to use to filter
 
 
 # putting your servers into a group based on a particular attribute and then running it for only those servers.
