@@ -16,6 +16,17 @@ pipeline {
                 }
             }
         }
+        stage("execute ansible playbook to configure ec2-Instances") {
+            steps {
+                script {
+                    echo "executing ansible playbook"
+                    sshagent(['SSH_Key']) {
+
+                                                                                                            }                                                                                        }
+                                            }
+                }
+            }
+        }
         
     }   
 }
